@@ -47,6 +47,20 @@
                 positionDiffInput.onchange = positionDiffInputChange;
                 positionDiffInputChange();
 
+                var baseDirections = ["逆", "左", "右"];
+                var baseDirectionIndex = -1;
+                var baseDirection;
+                var baseDirectionInput = document.getElementById("baseDirection");
+                function baseDirectionInputChange() {
+                    baseDirectionIndex = (baseDirectionIndex + 1) % baseDirections.length;
+                    baseDirection = baseDirections[baseDirectionIndex];
+                    baseDirectionInput.value = baseDirection;
+                    leftSetPosition = 0;
+                    rightSetPosition = 0;
+                }
+                baseDirectionInput.onclick = baseDirectionInputChange;
+                baseDirectionInputChange();
+
                 var leftSetPosition = 0;
                 var leftSetTransform = "";
                 var rightSetPosition = 0;
@@ -61,7 +75,13 @@
                     rightSetTransform = "translateX(" + rightSetPosition + "px)";
                     for (var i = 0; i < shimoones.length; ++i) {
                         var shimoone = shimoones[i];
-                        if (shimoone.dataset.direction === "left") {
+                        if (baseDirection === "逆") {
+                            if (shimoone.dataset.direction === "left") {
+                                shimoone.style.transform = leftSetTransform;
+                            } else {
+                                shimoone.style.transform = rightSetTransform;
+                            }
+                        } else if (baseDirection === "左") {
                             shimoone.style.transform = leftSetTransform;
                         } else {
                             shimoone.style.transform = rightSetTransform;
@@ -85,6 +105,7 @@
         </div>
         <div>
             速度: <input id="positionDiff" min="0" max="25" value="4" type="range">
+            方向: <input id="baseDirection" type="button">
         </div>
     </body>
 </html>
