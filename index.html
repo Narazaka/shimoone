@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ｼﾓーﾈ</title>
+        <script>
+            window.onload = function() {
+                var shimooneSetCount = 5;
+                var container = document.getElementById("container");
+                var originalShimoone1 = document.getElementById("shimoone1");
+                var width = originalShimoone1.clientWidth;
+                var height = originalShimoone1.clientHeight;
+                var originalShimoone2 = document.getElementById("shimoone2");
+                originalShimoone1.remove();
+                originalShimoone2.remove();
+                container.style.width = container.style.height = ((shimooneSetCount * 3 - 1) * height) + "px";
+
+                var shimoones = [];
+
+                function copyShimoone(row, row2, transparent) {
+                    var copiedShimoone = document.createElement("div");
+                    copiedShimoone.textContent = row % 2 ? originalShimoone1.textContent : originalShimoone2.textContent;
+                    copiedShimoone.id = "shimoone-" + row + "-" + row2;
+                    copiedShimoone.style.whiteSpace = "nowrap";
+                    copiedShimoone.style.color = transparent ? "transparent" : "black";
+                    copiedShimoone.style.position = "relative";
+                    copiedShimoone.dataset.direction = row % 2 ? "left" : "right";
+                    copiedShimoone.dataset.position = 0;
+                    container.appendChild(copiedShimoone);
+                    shimoones.push(copiedShimoone)
+                }
+
+                function copyShimooneSet(row) {
+                    copyShimoone(row, 0);
+                    copyShimoone(row, 1);
+                    copyShimoone(row, 2, true);
+                }
+
+                for (var i = 0; i < shimooneSetCount; ++i) {
+                    copyShimooneSet(i);
+                }
+
+                var positionDiff = width / 200;
+                setInterval(function() {
+                    for (var i = 0; i < shimoones.length; ++i) {
+                        const shimoone = shimoones[i];
+                        if (shimoone.dataset.direction === "left") {
+                            var position = Number(shimoone.dataset.position) - positionDiff;
+                            if (position < - width / 2) position = 0;
+                            shimoone.dataset.position = position;
+                        } else {
+                            var position = Number(shimoone.dataset.position) + positionDiff;
+                            if (position > 0) position = - width / 2;
+                            shimoone.dataset.position = position;
+                        }
+                        shimoone.style.transform = "translateX(" + shimoone.dataset.position + "px)";
+                    }
+                }, 33);
+            }
+        </script>
+        <style>
+            html, body { height: 100%; margin: 0; padding: 0; }
+        </style>
+    </head>
+    <body style="display: flex; justify-content: center; align-items: center;">
+        <div id="container" style="overflow: hidden; background: #eee;">
+            <div id="shimoone1" style="white-space: nowrap">
+                シモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネシモーネ
+            </div>
+            <div id="shimoone2" style="white-space: nowrap">
+                ネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシネーモシ
+            </div>
+        </div>
+    </body>
+</html>
