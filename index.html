@@ -25,7 +25,6 @@
                     copiedShimoone.style.color = transparent ? "transparent" : "black";
                     copiedShimoone.style.position = "relative";
                     copiedShimoone.dataset.direction = row % 2 ? "left" : "right";
-                    copiedShimoone.dataset.position = 0;
                     container.appendChild(copiedShimoone);
                     shimoones.push(copiedShimoone)
                 }
@@ -48,19 +47,25 @@
                 positionDiffInput.onchange = positionDiffInputChange;
                 positionDiffInputChange();
 
+                var leftSetPosition = 0;
+                var leftSetTransform = "";
+                var rightSetPosition = 0;
+                var rightSetTransform = "";
+
                 setInterval(function() {
+                    leftSetPosition -= positionDiff;
+                    if (leftSetPosition < - width / 2) leftSetPosition += width / 2;
+                    leftSetTransform = "translateX(" + leftSetPosition + "px)";
+                    rightSetPosition += positionDiff;
+                    if (rightSetPosition > 0) rightSetPosition -= width / 2;
+                    rightSetTransform = "translateX(" + rightSetPosition + "px)";
                     for (var i = 0; i < shimoones.length; ++i) {
-                        const shimoone = shimoones[i];
+                        var shimoone = shimoones[i];
                         if (shimoone.dataset.direction === "left") {
-                            var position = Number(shimoone.dataset.position) - positionDiff;
-                            if (position < - width / 2) position += width / 2;
-                            shimoone.dataset.position = position;
+                            shimoone.style.transform = leftSetTransform;
                         } else {
-                            var position = Number(shimoone.dataset.position) + positionDiff;
-                            if (position > 0) position -= width / 2;
-                            shimoone.dataset.position = position;
+                            shimoone.style.transform = rightSetTransform;
                         }
-                        shimoone.style.transform = "translateX(" + shimoone.dataset.position + "px)";
                     }
                 }, 33);
             }
